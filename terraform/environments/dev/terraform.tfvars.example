@@ -1,0 +1,51 @@
+# Copy to terraform.tfvars and replace ACCOUNT_ID / emails before first apply.
+# cp environments/dev/terraform.tfvars.example environments/dev/terraform.tfvars
+
+# First local apply: terraform apply ... -var="terraform_assume_role_enabled=false"
+# After the terraform role exists, omit that flag (defaults to true).
+
+environment                = "dev"
+aws_region                 = "ap-south-1"
+identity_center_region     = "ap-south-1"
+# Org Identity Center: platform admin manages groups/users. VA trusts IdC automatically.
+manage_identity_center     = false
+project_name               = "secure-access-portal"
+domain_name                = "cdec-engineer.store"
+app_subdomain              = "portal-dev"
+terraform_role_arn         = "arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:role/secure-access-portal-dev-terraform-role"
+alarm_email                = "nehalwandhare000@gmail.com"
+owner                      = "your-name"
+cost_center                = "personal"
+vpc_cidr                   = "10.10.0.0/16"
+private_subnet_cidrs       = ["10.10.1.0/24", "10.10.2.0/24"]
+public_subnet_cidrs        = ["10.10.101.0/24", "10.10.102.0/24"]
+availability_zones         = ["ap-south-1a", "ap-south-1b"]
+ec2_instance_type          = "t3.small"
+ec2_min_size               = 2
+ec2_max_size               = 4
+ec2_desired_capacity       = 2
+enable_deletion_protection = false
+enable_waf                 = false
+log_retention_days         = 30
+cedar_policy_version       = "v1.0.0"
+maintenance_mode           = false
+approved_email_domain      = "cdec-engineer.store"
+approved_groups            = ["VerifiedAccessUsers", "DevOps", "Admins"]
+create_ecr_repository      = true
+gitlab_project_path        = "nehal-wandhare-group/secure-access-portal"
+gitlab_url                 = "https://gitlab.com"
+enable_gitlab_oidc         = false
+enable_config              = false
+enable_cloudtrail          = false
+enable_guardduty           = false
+enable_inspector           = false
+enable_ssm_patching        = false
+
+identity_center_users = {
+  "va-user" = {
+    given_name  = "VA"
+    family_name = "User"
+    email       = "authorized-user@cdec-engineer.store"
+    groups      = ["VerifiedAccessUsers"]
+  }
+}

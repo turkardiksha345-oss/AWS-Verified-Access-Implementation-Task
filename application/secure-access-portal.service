@@ -1,0 +1,27 @@
+[Unit]
+Description=Secure Access Portal Application
+Documentation=https://gitlab.com/nehal-wandhare-group/secure-access-portal
+After=docker.service network-online.target
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+Environment=APP_ENV=production
+Environment=LOG_LEVEL=INFO
+Environment=PORT=8080
+ExecStartPre=-/usr/bin/docker stop secure-access-portal
+ExecStartPre=-/usr/bin/docker rm secure-access-portal
+ExecStart=/usr/bin/docker run --name secure-access-portal --rm -p 8080:8080 \
+  -e APP_ENV=production \
+  -e LOG_LEVEL=INFO \
+  secure-access-portal:latest
+ExecStop=/usr/bin/docker stop -t 25 secure-access-portal
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,100 @@
+﻿# module.verified_access.aws_verifiedaccess_endpoint.main:
+resource "aws_verifiedaccess_endpoint" "main" {
+    application_domain          = "portal-dev.cdec-engineer.store"
+    attachment_type             = "vpc"
+    description                 = "Verified Access endpoint for portal-dev.cdec-engineer.store"
+    device_validation_domain    = [90mnull[0m[0m
+    domain_certificate_arn      = "arn:aws:acm:ap-south-1:162521700916:certificate/5d51b589-8703-4a60-8c94-0db8c64b5a01"
+    endpoint_domain             = "secure-access-portal.edge-0f0fb7b8306663743.vai-08e7baf3349b1fe41.prod.verified-access.ap-south-1.amazonaws.com"
+    endpoint_domain_prefix      = "secure-access-portal"
+    endpoint_type               = "load-balancer"
+    id                          = "vae-00e9cce3341467b35"
+    policy_document             = <<-EOT
+        // =============================================================================
+        // Cedar Policy ΓÇö Verified Access Endpoint Policy
+        // Policy Version: v1.0.0
+        // =============================================================================
+        //
+        // Endpoint-level policy enforces the same authorization rules as the group
+        // policy, providing defense-in-depth at the Verified Access endpoint layer.
+        //
+        // Policy 1: Allow only explicitly approved email addresses
+        // Policy 2: Approved IAM Identity Center groups only
+        // Policy 3: Admins bypass maintenance mode
+        // Policy 4: Explicit deny all (default)
+        // =============================================================================
+        
+        // -----------------------------------------------------------------------------
+        // Policy 3: Admins bypass maintenance mode at endpoint level
+        // -----------------------------------------------------------------------------
+        permit(
+          principal,
+          action,
+          resource
+        )
+        when {
+          context.identity.group.contains("Admins")
+        };
+        
+        // -----------------------------------------------------------------------------
+        // Policy 1 + Policy 2: Exact approved email addresses AND group membership
+        // ----------------------------------------------------------------------------
+        permit(
+          principal,
+          action,
+          resource
+        )
+        when {
+          (
+            context.identity.email == "nehalwandhare000@gmail.com" ||
+            context.identity.email == "dikshat2403@gmail.com"
+          ) &&
+        
+          false == false
+        };
+        
+        // -----------------------------------------------------------------------------
+        // Policy 4: Explicit deny all ΓÇö unmatched requests are denied by Cedar default
+        // -----------------------------------------------------------------------------
+    EOT
+    security_group_ids          = [
+        "sg-00348dabcc07f2087",
+    ]
+    tags                        = {
+        "Compliance"    = "CIS-AWS-Benchmark"
+        "CostCenter"    = "personal"
+        "Environment"   = "dev"
+        "ManagedBy"     = "terraform"
+        "Name"          = "secure-access-portal-dev-va-endpoint"
+        "Owner"         = "nehal-wandhare"
+        "PolicyVersion" = "v1.0.0"
+        "Project"       = "secure-access-portal"
+    }
+    tags_all                    = {
+        "Compliance"    = "CIS-AWS-Benchmark"
+        "CostCenter"    = "personal"
+        "Environment"   = "dev"
+        "ManagedBy"     = "terraform"
+        "Name"          = "secure-access-portal-dev-va-endpoint"
+        "Owner"         = "nehal-wandhare"
+        "PolicyVersion" = "v1.0.0"
+        "Project"       = "secure-access-portal"
+    }
+    verified_access_group_id    = "vagr-06714dfc5e176a637"
+    verified_access_instance_id = "vai-08e7baf3349b1fe41"
+
+    load_balancer_options {
+        load_balancer_arn = "arn:aws:elasticloadbalancing:ap-south-1:162521700916:loadbalancer/app/secure-access-portal-dev-alb/adccd0c4825af367"
+        port              = 443
+        protocol          = "https"
+        subnet_ids        = [
+            "subnet-01e782b7cca4b636b",
+            "subnet-059d96cfc0d3d6bfa",
+        ]
+    }
+
+    sse_specification {
+        customer_managed_key_enabled = false
+        kms_key_arn                  = [90mnull[0m[0m
+    }
+}

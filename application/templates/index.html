@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secure Access Portal</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<nav>
+
+    <div class="brand">
+
+        🔒 Secure Portal
+
+    </div>
+
+    <ul>
+
+        <li>Dashboard</li>
+
+        <li>Infrastructure</li>
+
+        <li>Security</li>
+
+        <li>Status</li>
+
+    </ul>
+
+    <div id="clock">
+
+        --:--:--
+
+    </div>
+
+</nav>
+
+<div class="container">
+
+<div class="card">
+
+<div class="logo">
+
+🔒
+
+</div>
+
+<h1>
+
+Secure Access Portal
+
+</h1>
+
+<p class="subtitle">
+
+Protected by AWS Verified Access & IAM Identity Center
+
+</p>
+
+<div class="status">
+
+<div class="status-dot"></div>
+
+Application Running Successfully
+
+</div>
+
+<div class="cards">
+
+<div class="box">
+
+<div class="aws-icon">🌐</div>
+
+<h3>Environment</h3>
+
+<span>Production</span>
+
+</div>
+
+<div class="box">
+
+<div class="aws-icon">🔐</div>
+
+<h3>Authentication</h3>
+
+<span>IAM Identity Center</span>
+
+</div>
+
+<div class="box">
+
+<div class="aws-icon">☁️</div>
+
+<h3>Hosting</h3>
+
+<span>AWS EC2</span>
+
+</div>
+
+<div class="box">
+
+<div class="aws-icon">🐳</div>
+
+<h3>Container</h3>
+
+<span>Docker</span>
+
+</div>
+
+<div class="box">
+
+<div class="aws-icon">⚖️</div>
+
+<h3>Load Balancer</h3>
+
+<span>Application LB</span>
+
+</div>
+
+<div class="box">
+
+<div class="aws-icon">🛡️</div>
+
+<h3>Security</h3>
+
+<span>AWS Verified Access</span>
+
+</div>
+
+</div>
+
+<div class="flow">
+
+Internet
+
+<span>→</span>
+
+Route53
+
+<span>→</span>
+
+Verified Access
+
+<span>→</span>
+
+ALB
+
+<span>→</span>
+
+EC2
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+
+<h2 id="users">0</h2>
+
+<p>Verified Users</p>
+
+</div>
+
+<div class="stat">
+
+<h2 id="servers">0</h2>
+
+<p>Servers</p>
+
+</div>
+
+<div class="stat">
+
+<h2 id="uptime">0</h2>
+
+<p>Uptime %</p>
+
+</div>
+
+<div class="stat">
+
+<h2 id="requests">0</h2>
+
+<p>Daily Requests</p>
+
+</div>
+
+</div>
+
+<footer>
+
+© 2026 Secure Access Portal
+
+</footer>
+
+</div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>
