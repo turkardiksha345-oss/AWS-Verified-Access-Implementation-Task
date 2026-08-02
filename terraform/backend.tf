@@ -10,5 +10,10 @@
 #   kms_key_id     = "arn:aws:kms:ap-south-1:ACCOUNT_ID:key/KEY_ID"
 
 terraform {
-  backend "s3" {}
+  backend "s3" {
+    name         = "aws-access-verified-task "
+    key          = "verified-access/terraform.tfstate"  
+    region       = "eu-north-1"
+    encrypt      = true
+  }
 }
