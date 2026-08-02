@@ -5,7 +5,7 @@
 variable "aws_region" {
   description = "Primary AWS region for workload resources"
   type        = string
-  default     = "ap-south-1"
+  default     = "eu-north-1"
 
   validation {
     condition     = can(regex("^[a-z]{2}-[a-z]+-[0-9]$", var.aws_region))
@@ -16,7 +16,7 @@ variable "aws_region" {
 variable "identity_center_region" {
   description = "Region where IAM Identity Center is configured"
   type        = string
-  default     = "ap-south-1"
+  default     = "eu-north-1"
 }
 
 variable "manage_identity_center" {
@@ -43,11 +43,11 @@ variable "identity_center_instance_arn" {
 variable "environment" {
   description = "Deployment environment"
   type        = string
-  default     = "dev"
+  default     = "Preprod"
 
   validation {
-    condition     = var.environment == "dev"
-    error_message = "Only the dev environment is supported."
+    condition     = var.environment == "Preprod"
+    error_message = "Only the Preprod environment is supported."
   }
 }
 
@@ -83,7 +83,7 @@ variable "terraform_assume_role_enabled" {
 variable "owner" {
   description = "Team or individual responsible for this infrastructure"
   type        = string
-  default     = "nehal-wandhare"
+  default     = "diksha-turkar"
 }
 
 variable "cost_center" {
@@ -101,7 +101,7 @@ variable "vpc_cidr" {
 variable "availability_zones" {
   description = "List of AZs to spread resources across"
   type        = list(string)
-  default     = ["ap-south-1a", "ap-south-1b", "ap-south-1c"]
+  default     = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
 }
 
 variable "private_subnet_cidrs" {
@@ -119,7 +119,7 @@ variable "public_subnet_cidrs" {
 variable "ec2_instance_type" {
   description = "EC2 instance type for application servers"
   type        = string
-  default     = "t3.small"
+  default     = "t3.micro"
 }
 
 variable "ec2_min_size" {
@@ -204,20 +204,20 @@ variable "create_ecr_repository" {
   default     = true
 }
 
-variable "gitlab_project_path" {
-  description = "GitLab project path for OIDC federation"
+variable "github_project_path" {
+  description = "GitHub project path for OIDC federation"
   type        = string
-  default     = "nehal-wandhare-group/secure-access-portal"
+  default     = "turkardiksha345-oss/AWS-Verified-Access-Implementation-Task"
+  }
+
+variable "github_url" {
+  description = "GitHub base URL used for OIDC federation"
+  type        = string
+  default     = "https://github.com"
 }
 
-variable "gitlab_url" {
-  description = "GitLab base URL used for OIDC federation"
-  type        = string
-  default     = "https://gitlab.com"
-}
-
-variable "enable_gitlab_oidc" {
-  description = "Create GitLab OIDC provider and allow CI/CD to assume the Terraform role"
+variable "enable_github_oidc" {
+  description = "Create GitHub OIDC provider and allow CI/CD to assume the Terraform role"
   type        = bool
   default     = true
 }

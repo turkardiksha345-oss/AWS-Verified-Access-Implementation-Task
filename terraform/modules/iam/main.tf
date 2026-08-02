@@ -36,26 +36,26 @@ variable "ecr_repository_arns" {
   default = []
 }
 
-variable "gitlab_oidc_provider_arn" {
-  description = "Existing GitLab OIDC provider ARN; created when enable_gitlab_oidc is true"
+variable "github_oidc_provider_arn" {
+  description = "Existing GitHub OIDC provider ARN; created when enable_github_oidc is true"
   type        = string
   default     = ""
 }
 
-variable "gitlab_url" {
-  description = "GitLab base URL for OIDC"
+variable "github_url" {
+  description = "GitHub base URL for OIDC"
   type        = string
-  default     = "https://gitlab.com"
+  default     = "https://github.com"
 }
 
-variable "gitlab_project_path" {
-  description = "GitLab project path for OIDC subject condition"
+variable "github_project_path" {
+  description = "GitHub project path for OIDC subject condition"
   type        = string
   default     = "nehal-wandhare-group/secure-access-portal"
 }
 
-variable "enable_gitlab_oidc" {
-  description = "Create GitLab OIDC provider and allow CI/CD to assume the Terraform role"
+variable "enable_github_oidc" {
+  description = "Create GitHub OIDC provider and allow CI/CD to assume the Terraform role"
   type        = bool
   default     = true
 }
@@ -68,21 +68,21 @@ data "aws_caller_identity" "current" {}
 
 data "aws_partition" "current" {}
 
-# Fetch GitLab TLS thumbprint for IAM OIDC provider
-data "tls_certificate" "gitlab" {
-  count = var.enable_gitlab_oidc && var.gitlab_oidc_provider_arn == "" ? 1 : 0
-  url   = var.gitlab_url
+# Fetch GitHub TLS thumbprint for IAM OIDC provider
+data "tls_certificate" "github" {
+  count = var.enable_github_oidc && var.github_oidc_provider_arn == "" ? 1 : 0
+  url   = var.github_url
 }
 
 locals {
-  gitlab_oidc_host = replace(replace(var.gitlab_url, "https://", ""), "http://", "")
+  github_oidc_host = replace(replace(var.github_url, "https://", ""), "http://", "")
 
-  gitlab_oidc_provider_arn = var.enable_gitlab_oidc ? (
-    length(aws_iam_openid_connect_provider.gitlab) > 0 ? aws_iam_openid_connect_provider.gitlab[0].arn : var.gitlab_oidc_provider_arn
-  ) : var.gitlab_oidc_provider_arn
+  github_oidc_provider_arn = var.enable_github_oidc ? (
+    length(aws_iam_openid_connect_provider.github) > 0 ? aws_iam_openid_connect_provider.github[0].arn : var.github_oidc_provider_arn
+  ) : var.github_oidc_provider_arn
 
-  gitlab_oidc_thumbprints = length(data.tls_certificate.gitlab) > 0 ? distinct([
-    for cert in data.tls_certificate.gitlab[0].certificates : cert.sha1_fingerprint
+  github_oidc_thumbprints = length(data.tls_certificate.github) > 0 ? distinct([
+    for cert in data.tls_certificate.github[0].certificates : cert.sha1_fingerprint
   ]) : []
 
   terraform_assume_role_statements = concat(
@@ -100,19 +100,19 @@ locals {
         }
       }
     ],
-    local.gitlab_oidc_provider_arn != "" ? [
+    local.github_oidc_provider_arn != "" ? [
       {
         Effect = "Allow"
         Principal = {
-          Federated = local.gitlab_oidc_provider_arn
+          Federated = local.github_oidc_provider_arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
           StringEquals = {
-            "${local.gitlab_oidc_host}:aud" = var.gitlab_url
+            "${local.github_oidc_host}:aud" = var.github_url
           }
           StringLike = {
-            "${local.gitlab_oidc_host}:sub" = "project_path:${var.gitlab_project_path}:*"
+            "${local.github_oidc_host}:sub" = "project_path:${var.github_project_path}:*"
           }
         }
       }
@@ -120,19 +120,19 @@ locals {
   )
 }
 
-resource "aws_iam_openid_connect_provider" "gitlab" {
-  count = var.enable_gitlab_oidc && var.gitlab_oidc_provider_arn == "" ? 1 : 0
+resource "aws_iam_openid_connect_provider" "github" {
+  count = var.enable_github_oidc && var.github_oidc_provider_arn == "" ? 1 : 0
 
-  url = var.gitlab_url
+  url = var.github_url
 
   client_id_list = [
-    var.gitlab_url,
+    var.github_url,
   ]
 
-  thumbprint_list = local.gitlab_oidc_thumbprints
+  thumbprint_list = local.github_oidc_thumbprints
 
   tags = merge(var.tags, {
-    Name = "${var.name_prefix}-gitlab-oidc"
+    Name = "${var.name_prefix}-github-oidc"
   })
 }
 
@@ -355,6 +355,6 @@ output "terraform_role_arn" {
   value = aws_iam_role.terraform.arn
 }
 
-output "gitlab_oidc_provider_arn" {
-  value = local.gitlab_oidc_provider_arn
+output "github_oidc_provider_arn" {
+  value = local.github_oidc_provider_arn
 }

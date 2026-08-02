@@ -81,9 +81,9 @@ module "iam" {
   secrets_manager_arns = module.logs.secrets_manager_arns
   s3_bucket_arns       = [module.logs.alb_logs_bucket_arn, module.logs.flow_logs_bucket_arn]
   ecr_repository_arns  = var.create_ecr_repository ? [module.ecr[0].repository_arn] : []
-  gitlab_project_path  = var.gitlab_project_path
-  gitlab_url           = var.gitlab_url
-  enable_gitlab_oidc   = var.enable_gitlab_oidc
+  github_project_path  = var.github_project_path
+  github_url           = var.github_url
+  enable_github_oidc   = var.enable_github_oidc
   tags                 = local.common_tags
 }
 
