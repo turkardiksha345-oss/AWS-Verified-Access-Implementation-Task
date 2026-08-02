@@ -11,7 +11,7 @@
 
 terraform {
   backend "s3" {
-    name         = "aws-access-verified-task "
+    bucket       = "aws-access-verified-task "
     key          = "verified-access/terraform.tfstate"  
     region       = "eu-north-1"
     encrypt      = true
