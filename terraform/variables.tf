@@ -72,13 +72,13 @@ variable "app_subdomain" {
 variable "terraform_role_arn" {
   description = "IAM role ARN assumed by Terraform in CI/CD"
   type        = string
-  default     = "arn:aws:iam::064123638500:role/terraform-ec2-access"
+  default     = ""
 }
 
 variable "terraform_assume_role_enabled" {
   description = "Assume terraform_role_arn in the AWS provider; set false on first local apply (role does not exist yet) or when CI uses OIDC directly"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "owner" {
