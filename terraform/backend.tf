@@ -13,7 +13,7 @@ terraform {
   backend "s3" {
     bucket       = "aws-access-verified-task"
     key          = "verified-access/terraform.tfstate"  
-    region       = "eu-north-1"
+    region       = "ap-southeast-2"
     encrypt      = true
   }
 }
