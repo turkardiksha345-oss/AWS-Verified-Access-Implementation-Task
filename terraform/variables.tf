@@ -72,6 +72,7 @@ variable "app_subdomain" {
 variable "terraform_role_arn" {
   description = "IAM role ARN assumed by Terraform in CI/CD"
   type        = string
+  default     = "arn:aws:iam::064123638500:role/terraform-ec2-access"
 }
 
 variable "terraform_assume_role_enabled" {
@@ -248,6 +249,7 @@ variable "log_retention_days" {
 variable "alarm_email" {
   description = "Email address for SNS alarm notifications"
   type        = string
+  default     = "dikshaturkar2022@gmail.com"
 }
 
 variable "enable_deletion_protection" {
