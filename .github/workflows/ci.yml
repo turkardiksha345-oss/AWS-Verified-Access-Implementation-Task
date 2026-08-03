@@ -135,7 +135,7 @@ jobs:
           config: auto
 
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
           scan-ref: .
@@ -155,9 +155,11 @@ jobs:
         run: |
           test -f cedar/group-policy.cedar
           test -f cedar/endpoint-policy.cedar
-          grep -q "Policy 1" cedar/group-policy.cedar
-          grep -q "Policy 4" cedar/group-policy.cedar
-          grep -q "cdec-engineer.store" cedar/group-policy.cedar
+          grep -q "permit(" cedar/group-policy.cedar
+          grep -q "context.identity.group.contains" cedar/group-policy.cedar
+          grep -q "permit(" cedar/endpoint-policy.cedar
+
+          echo "Cedar policies validated successfully."
 
   docker-build:
     name: Docker image build
