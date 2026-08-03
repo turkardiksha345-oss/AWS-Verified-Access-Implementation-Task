@@ -129,13 +129,9 @@ jobs:
         run: safety check -r ${{ env.APP_DIR }}/requirements.txt --full-report
 
       - name: Run Semgrep
-        if: ${{ secrets.SEMGREP_APP_TOKEN != '' }}
         uses: returntocorp/semgrep-action@v1
         with:
           config: auto
-          generateSarif: true
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
       - name: Run Trivy filesystem scan
         uses: aquasecurity/trivy-action@0.24.0
