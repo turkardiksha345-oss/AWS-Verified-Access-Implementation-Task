@@ -35,7 +35,7 @@ locals {
 # policy. KMS rejects policies that name a role which does not yet exist.
 # resource "aws_iam_service_linked_role" "autoscaling" {
 # aws_service_name = "my-autoscaling.amazonaws.com"
- # description      = "Service-linked role for Secure Access Portal Auto Scaling"
+# description      = "Service-linked role for Secure Access Portal Auto Scaling"
 # }
 
 # KMS key for encryption at rest (created if not provided)
@@ -93,42 +93,42 @@ resource "aws_kms_key" "logs" {
       },
       # Required for ASG to launch EC2 with CMK-encrypted EBS volumes
       {
-  Sid    = "AllowAutoScalingServiceLinkedRole"
-  Effect = "Allow"
+        Sid    = "AllowAutoScalingServiceLinkedRole"
+        Effect = "Allow"
 
-  Principal = {
-    AWS = "arn:${local.partition}:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
-  }
+        Principal = {
+          AWS = "arn:${local.partition}:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        }
 
-         Action = [
-           "kms:Encrypt",
-    "kms:Decrypt",
-    "kms:ReEncrypt*",
-    "kms:GenerateDataKey*",
-    "kms:DescribeKey",
-  ]
+        Action = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey",
+        ]
         Resource = "*"
       },
       {
-  Sid    = "AllowAutoScalingCreateGrant"
-  Effect = "Allow"
+        Sid    = "AllowAutoScalingCreateGrant"
+        Effect = "Allow"
 
-  Principal = {
-    AWS = "arn:${local.partition}:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
-  }
+        Principal = {
+          AWS = "arn:${local.partition}:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+        }
 
-  Action = [
-    "kms:CreateGrant"
-  ]
+        Action = [
+          "kms:CreateGrant"
+        ]
 
-  Resource = "*"
+        Resource = "*"
 
-  Condition = {
-    Bool = {
-      "kms:GrantIsForAWSResource" = "true"
-    }
-  }
-}
+        Condition = {
+          Bool = {
+            "kms:GrantIsForAWSResource" = "true"
+          }
+        }
+      }
     ]
   })
 
