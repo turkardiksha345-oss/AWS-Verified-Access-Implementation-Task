@@ -30,6 +30,7 @@ env:
   ECR_REPOSITORY_NAME: ${{ vars.ECR_REPOSITORY_NAME || 'secure-access-portal-preprod-app' }}
   APP_URL: ${{ vars.APP_URL || 'https://app.cdec-engineer.store' }}
 
+
 jobs:
   deploy:
     name: Build, push, plan, apply, and verify
@@ -40,6 +41,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Debug workflow
+        run: |
+            echo "Repository = ${{ github.repository }}"
+            echo "Workflow = ${{ github.workflow }}"
+            echo "Event = ${{ github.event_name }}"
+            echo "Head Repository = ${{ github.event.workflow_run.head_repository.full_name }}"
+            echo "Head Branch = ${{ github.event.workflow_run.head_branch }}"
+
+      - name: Check OIDC variables
+        run: |
+           echo "ACTIONS_ID_TOKEN_REQUEST_URL=$ACTIONS_ID_TOKEN_REQUEST_URL"
+           echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN exists:"
+           if [ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+           echo "YES"
+           else
+           echo "NO"
+           fi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
