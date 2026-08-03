@@ -128,34 +128,42 @@ resource "aws_kms_key" "logs" {
       },
       # Required for ASG to launch EC2 with CMK-encrypted EBS volumes
       {
-        Sid    = "AllowAutoScalingServiceLinkedRole"
-        Effect = "Allow"
-        Principal = {
-          AWS = aws_iam_service_linked_role.autoscaling.arn
-        }
-        Action = [
-          "kms:Encrypt",
-          "kms:Decrypt",
-          "kms:ReEncrypt*",
-          "kms:GenerateDataKey*",
-          "kms:DescribeKey",
-        ]
+  Sid    = "AllowAutoScalingServiceLinkedRole"
+  Effect = "Allow"
+
+  Principal = {
+    AWS = "arn:${local.partition}:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+  }
+
+         Action = [
+           "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:ReEncrypt*",
+    "kms:GenerateDataKey*",
+    "kms:DescribeKey",
+  ]
         Resource = "*"
       },
       {
-        Sid    = "AllowAutoScalingCreateGrant"
-        Effect = "Allow"
-        Principal = {
-          AWS = aws_iam_service_linked_role.autoscaling.arn
-        }
-        Action   = "kms:CreateGrant"
-        Resource = "*"
-        Condition = {
-          Bool = {
-            "kms:GrantIsForAWSResource" = "true"
-          }
-        }
-      }
+  Sid    = "AllowAutoScalingCreateGrant"
+  Effect = "Allow"
+
+  Principal = {
+    AWS = "arn:${local.partition}:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+  }
+
+  Action = [
+    "kms:CreateGrant"
+  ]
+
+  Resource = "*"
+
+  Condition = {
+    Bool = {
+      "kms:GrantIsForAWSResource" = "true"
+    }
+  }
+}
     ]
   })
 
