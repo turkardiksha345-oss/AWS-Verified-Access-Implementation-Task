@@ -50,12 +50,6 @@ signal.signal(signal.SIGTERM, _handle_shutdown)
 signal.signal(signal.SIGINT, _handle_shutdown)
 
 
-@app.before_request
-def add_security_headers():
-    """Apply security headers on every response."""
-    return None
-
-
 @app.after_request
 def set_security_headers(response):
     response.headers["Strict-Transport-Security"] = (
