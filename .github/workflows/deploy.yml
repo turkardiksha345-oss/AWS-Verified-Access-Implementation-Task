@@ -92,10 +92,10 @@ jobs:
           terraform init -backend-config=environments/dev/backend.hcl -input=false
           terraform plan -var-file=environments/dev/terraform.tfvars -out=tfplan -input=false
 
-    #  - name: Terraform apply
-    #    run: |
-    #     cd ${{ env.TERRAFORM_DIR }}
-    #     terraform apply -auto-approve -input=false tfplan
+      - name: Terraform apply
+        run: |
+          cd ${{ env.TERRAFORM_DIR }}
+          terraform apply -auto-approve -input=false tfplan
 
       - name: Trigger Auto Scaling Group instance refresh
         env:
