@@ -53,7 +53,7 @@ signal.signal(signal.SIGINT, _handle_shutdown)
 @app.before_request
 def add_security_headers():
     """Apply security headers on every response."""
-    pass
+    return None
 
 
 @app.after_request
@@ -122,12 +122,12 @@ def not_found(error):
 
 @app.errorhandler(500)
 def internal_error(error):
-    logger.error("Internal server error", exc_info=True)
+    logger.error("Internal server error")
     return jsonify({"error": "internal_server_error"}), 500
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", "8080"))
 
     # Only for local development.
     app.run(host="127.0.0.1", port=port, debug=False)
