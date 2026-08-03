@@ -2,41 +2,6 @@
 # Logs Module — centralized logging, CloudTrail, AWS Config, GuardDuty
 # ---------------------------------------------------------------------------
 
-variable "name_prefix" {
-  type = string
-}
-
-variable "aws_region" {
-  type = string
-}
-
-variable "log_retention_days" {
-  type = number
-}
-
-variable "kms_key_arn" {
-  type    = string
-  default = null
-}
-
-variable "cloudtrail_bucket" {
-  type    = string
-  default = ""
-}
-
-variable "enable_config" {
-  type = bool
-}
-
-variable "enable_cloudtrail" {
-  description = "Create CloudTrail trail and related IAM/log group (often blocked on sandbox SSO)"
-  type        = bool
-  default     = false
-}
-
-variable "tags" {
-  type = map(string)
-}
 
 data "aws_caller_identity" "current" {}
 
@@ -549,6 +514,46 @@ resource "aws_secretsmanager_secret_version" "app" {
     log_level = "INFO"
   })
 }
+
+## Variables ##
+
+variable "name_prefix" {
+  type = string
+}
+
+variable "aws_region" {
+  type = string
+}
+
+variable "log_retention_days" {
+  type = number
+}
+
+variable "kms_key_arn" {
+  type    = string
+  default = null
+}
+
+variable "cloudtrail_bucket" {
+  type    = string
+  default = ""
+}
+
+variable "enable_config" {
+  type = bool
+}
+
+variable "enable_cloudtrail" {
+  description = "Create CloudTrail trail and related IAM/log group (often blocked on sandbox SSO)"
+  type        = bool
+  default     = false
+}
+
+variable "tags" {
+  type = map(string)
+}
+
+## OUTPUTS ##
 
 output "verified_access_log_group_arn" {
   value = aws_cloudwatch_log_group.verified_access.arn

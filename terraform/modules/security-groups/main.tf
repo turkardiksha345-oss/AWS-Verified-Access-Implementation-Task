@@ -2,25 +2,6 @@
 # Security Groups — least-privilege network access controls
 # ---------------------------------------------------------------------------
 
-variable "name_prefix" {
-  type = string
-}
-
-variable "vpc_id" {
-  type = string
-}
-
-variable "app_port" {
-  type = number
-}
-
-variable "vpc_cidr_block" {
-  type = string
-}
-
-variable "tags" {
-  type = map(string)
-}
 
 # ALB — HTTPS only from Verified Access ENIs (no public CIDR on ALB).
 resource "aws_security_group" "alb" {
@@ -147,6 +128,31 @@ resource "aws_security_group" "verified_access" {
     create_before_destroy = true
   }
 }
+
+## Variable definitions ##
+
+variable "name_prefix" {
+  type = string
+}
+
+variable "vpc_id" {
+  type = string
+}
+
+variable "app_port" {
+  type = number
+}
+
+variable "vpc_cidr_block" {
+  type = string
+}
+
+variable "tags" {
+  type = map(string)
+}
+
+
+## OUTPUTS ##
 
 output "alb_security_group_id" {
   value = aws_security_group.alb.id

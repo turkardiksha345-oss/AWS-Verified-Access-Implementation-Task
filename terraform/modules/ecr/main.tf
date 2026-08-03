@@ -2,22 +2,7 @@
 # ECR Module — container registry for the application image
 # ---------------------------------------------------------------------------
 
-variable "name_prefix" {
-  type = string
-}
 
-variable "kms_key_arn" {
-  type = string
-}
-
-variable "image_retention_count" {
-  type    = number
-  default = 10
-}
-
-variable "tags" {
-  type = map(string)
-}
 
 resource "aws_ecr_repository" "app" {
   name                 = lower("${var.name_prefix}-app")
@@ -58,14 +43,4 @@ resource "aws_ecr_lifecycle_policy" "app" {
   })
 }
 
-output "repository_url" {
-  value = aws_ecr_repository.app.repository_url
-}
 
-output "repository_arn" {
-  value = aws_ecr_repository.app.arn
-}
-
-output "repository_name" {
-  value = aws_ecr_repository.app.name
-}

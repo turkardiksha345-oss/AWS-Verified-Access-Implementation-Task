@@ -1,25 +1,5 @@
 # VPC Interface Endpoints — private connectivity for SSM (no internet required)
 
-variable "name_prefix" {
-  type = string
-}
-
-variable "vpc_id" {
-  type = string
-}
-
-variable "private_subnet_ids" {
-  type = list(string)
-}
-
-variable "security_group_id" {
-  type = string
-}
-
-variable "tags" {
-  type = map(string)
-}
-
 locals {
   endpoint_services = [
     "com.amazonaws.${data.aws_region.current.name}.ssm",
@@ -48,6 +28,4 @@ resource "aws_vpc_endpoint" "interface" {
   })
 }
 
-output "endpoint_ids" {
-  value = [for ep in aws_vpc_endpoint.interface : ep.id]
-}
+

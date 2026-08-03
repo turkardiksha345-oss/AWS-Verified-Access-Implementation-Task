@@ -4,10 +4,9 @@
 # backend.hcl:
 #   bucket         = "secure-access-portal-terraform-state-ACCOUNT_ID"
 #   key            = "verified-access/terraform.tfstate"
-#   region         = "ap-south-1"
+#   region         = "eu-north-1"
 #   encrypt        = true
 #   use_lockfile   = true
-#   kms_key_id     = "arn:aws:kms:ap-south-1:ACCOUNT_ID:key/KEY_ID"
 
 terraform {
   backend "s3" {
