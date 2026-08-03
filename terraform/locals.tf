@@ -1,5 +1,5 @@
 locals {
-  name_prefix = "${var.project_name}-${var.environment}"
+  name_prefix = lower("${var.project_name}-${var.environment}")
   fqdn        = "${var.app_subdomain}.${var.domain_name}"
 
   identity_center_instance_arn = try(module.identity_center[0].instance_arn, var.identity_center_instance_arn)
