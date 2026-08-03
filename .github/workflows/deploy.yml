@@ -90,7 +90,7 @@ jobs:
         run: |
           cd ${{ env.TERRAFORM_DIR }}
           terraform init -backend-config=environments/dev/backend.hcl -input=false
-          terraform plan -var-file=variables.tf
+          terraform plan -out=tfplan
 
       - name: Terraform apply
         run: |
