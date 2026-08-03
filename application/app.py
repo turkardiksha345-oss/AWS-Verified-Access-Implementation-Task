@@ -12,7 +12,7 @@ import signal
 import sys
 from datetime import datetime, timezone
 
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, render_template, request
 
 APP_VERSION = os.environ.get("APP_VERSION", "1.0.0")
 APP_ENV = os.environ.get("APP_ENV", "production")

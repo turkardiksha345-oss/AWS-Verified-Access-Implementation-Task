@@ -55,6 +55,7 @@ jobs:
       - name: Run Terraform formatting check
         run: terraform fmt -check -recursive ${{ env.TERRAFORM_DIR }}
 
+
   test:
     name: Unit tests
     runs-on: ubuntu-latest
