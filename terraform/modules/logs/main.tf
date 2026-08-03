@@ -68,10 +68,10 @@ locals {
 
 # Create the Auto Scaling service-linked role before referencing it in the KMS
 # policy. KMS rejects policies that name a role which does not yet exist.
-resource "aws_iam_service_linked_role" "autoscaling" {
-  aws_service_name = "autoscaling.amazonaws.com"
-  description      = "Service-linked role for Secure Access Portal Auto Scaling"
-}
+# resource "aws_iam_service_linked_role" "autoscaling" {
+# aws_service_name = "my-autoscaling.amazonaws.com"
+ # description      = "Service-linked role for Secure Access Portal Auto Scaling"
+# }
 
 # KMS key for encryption at rest (created if not provided)
 resource "aws_kms_key" "logs" {
@@ -198,9 +198,8 @@ resource "aws_cloudwatch_log_group" "cloudtrail" {
   })
 }
 
-# S3 buckets for ALB and VPC flow logs
 resource "aws_s3_bucket" "alb_logs" {
-  bucket = "${var.name_prefix}-alb-logs-${local.account_id}"
+  bucket = lower("${var.name_prefix}-alb-logs-${local.account_id}")
 
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-alb-logs"
@@ -306,7 +305,7 @@ resource "aws_s3_bucket_policy" "alb_logs" {
 }
 
 resource "aws_s3_bucket" "flow_logs" {
-  bucket = "${var.name_prefix}-flow-logs-${local.account_id}"
+  bucket = var.cloudtrail_bucket != "" ? var.cloudtrail_bucket : lower("${var.name_prefix}-cloudtrail-${local.account_id}")
 
   tags = merge(var.tags, {
     Name = "${var.name_prefix}-flow-logs"
