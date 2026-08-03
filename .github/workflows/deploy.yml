@@ -79,41 +79,64 @@ jobs:
     #     terraform apply -auto-approve -input=false tfplan
 
       - name: Trigger Auto Scaling Group instance refresh
-        if: ${{ secrets.AWS_ASG_NAME != '' }}
+        env:
+          AWS_ASG_NAME: ${{ secrets.AWS_ASG_NAME }}
         run: |
+          if [ -z "$AWS_ASG_NAME" ]; then
+            echo "AWS_ASG_NAME not configured. Skipping..."
+            exit 0
+          fi
+
           aws autoscaling start-instance-refresh \
-            --auto-scaling-group-name "${{ secrets.AWS_ASG_NAME }}" \
+            --auto-scaling-group-name "$AWS_ASG_NAME" \
             --preferences '{"MinHealthyPercentage":90,"InstanceWarmup":300}'
 
       - name: Wait for instance refresh completion
-        if: ${{ secrets.AWS_ASG_NAME != '' }}
+        env:
+          AWS_ASG_NAME: ${{ secrets.AWS_ASG_NAME }}
         run: |
+          if [ -z "$AWS_ASG_NAME" ]; then
+            echo "AWS_ASG_NAME not configured. Skipping..."
+            exit 0
+          fi
+
           for i in $(seq 1 30); do
             STATUS=$(aws autoscaling describe-instance-refreshes \
-              --auto-scaling-group-name "${{ secrets.AWS_ASG_NAME }}" \
-              --query 'InstanceRefreshes[0].Status' --output text)
-            echo "Current instance refresh status: $STATUS"
+              --auto-scaling-group-name "$AWS_ASG_NAME" \
+              --query "InstanceRefreshes[0].Status" \
+              --output text)
+
+            echo "Current status: $STATUS"
+
             if [ "$STATUS" = "Successful" ]; then
               exit 0
             fi
+
             if [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ]; then
-              echo "Instance refresh did not complete successfully"
               exit 1
             fi
+
             sleep 60
           done
-          echo "Instance refresh did not complete within the expected time"
+
+          echo "Timed out waiting for instance refresh."
           exit 1
 
       - name: Verify ALB target health
-        if: ${{ secrets.ALB_TARGET_GROUP_ARN != '' }}
+        env:
+          ALB_TARGET_GROUP_ARN: ${{ secrets.ALB_TARGET_GROUP_ARN }}
         run: |
+          if [ -z "$ALB_TARGET_GROUP_ARN" ]; then
+            echo "ALB_TARGET_GROUP_ARN not configured. Skipping..."
+            exit 0
+          fi
+
           aws elbv2 describe-target-health \
-            --target-group-arn "${{ secrets.ALB_TARGET_GROUP_ARN }}" \
-            --query 'TargetHealthDescriptions[?TargetHealth.State==`healthy`].Target.Id' \
+            --target-group-arn "$ALB_TARGET_GROUP_ARN" \
+            --query "TargetHealthDescriptions[*].[Target.Id,TargetHealth.State]" \
             --output table
 
       - name: Smoke test application endpoints
         run: |
-          curl -fsS ${{ env.APP_URL }}/health
-          curl -fsS ${{ env.APP_URL }}/readiness
+          curl -fsS "${{ env.APP_URL }}/health"
+          curl -fsS "${{ env.APP_URL }}/readiness"
