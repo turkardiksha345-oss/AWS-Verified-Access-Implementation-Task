@@ -1,8 +1,9 @@
 name: Deploy yaml
  
 on:
-  push:
-    branches: [main, develop]
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
   workflow_dispatch:
     inputs:
       environment:
@@ -33,7 +34,7 @@ jobs:
   deploy:
     name: Build, push, plan, apply, and verify
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: ${{ github.event.inputs.environment || 'dev' }}
     steps:
