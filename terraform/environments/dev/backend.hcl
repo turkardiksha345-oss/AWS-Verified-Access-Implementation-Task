@@ -1,5 +1,5 @@
 # Terraform state stored in S3 only (S3-native locking — no DynamoDB per platform team)
-bucket       = "secure-access-portal-terraform-state-162521700916"
+bucket       = "aws-access-verified-task"
 key          = "verified-access/terraform.tfstate"
 region       = "ap-southeast-2"
 encrypt      = true
