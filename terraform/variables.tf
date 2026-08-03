@@ -209,7 +209,7 @@ variable "github_project_path" {
   description = "GitHub project path for OIDC federation"
   type        = string
   default     = "turkardiksha345-oss/AWS-Verified-Access-Implementation-Task"
-  }
+}
 
 variable "github_url" {
   description = "GitHub base URL used for OIDC federation"

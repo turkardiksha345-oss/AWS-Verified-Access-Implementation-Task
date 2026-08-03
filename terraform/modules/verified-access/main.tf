@@ -73,6 +73,11 @@ resource "aws_verifiedaccess_trust_provider" "identity_center" {
   })
 }
 
+resource "aws_verifiedaccess_instance_trust_provider_attachment" "idc" {
+  verifiedaccess_instance_id       = aws_verifiedaccess_instance.main.id
+  verifiedaccess_trust_provider_id = aws_verifiedaccess_trust_provider.identity_center.id
+}
+
 resource "aws_verifiedaccess_group" "main" {
   verifiedaccess_instance_id = aws_verifiedaccess_instance.main.id
   policy_document            = var.cedar_group_policy
@@ -82,16 +87,16 @@ resource "aws_verifiedaccess_group" "main" {
     PolicyVersion = var.cedar_policy_version
   })
 
-  # AWS requires a trust provider attached to the instance before creating a group.
-  depends_on = [aws_verifiedaccess_instance_trust_provider_attachment.idc]
+  depends_on = [
+    aws_verifiedaccess_instance_trust_provider_attachment.idc
+  ]
 }
 
 resource "aws_verifiedaccess_endpoint" "main" {
-  application_domain     = var.fqdn
-  attachment_type        = "vpc"
-  description            = "Verified Access endpoint for ${var.fqdn}"
-  domain_certificate_arn = var.certificate_arn
-  # AWS permits a maximum of 20 characters for this prefix.
+  application_domain       = var.fqdn
+  attachment_type          = "vpc"
+  description              = "Verified Access endpoint for ${var.fqdn}"
+  domain_certificate_arn   = var.certificate_arn
   endpoint_domain_prefix   = substr(replace(var.name_prefix, "_", "-"), 0, 20)
   endpoint_type            = "load-balancer"
   policy_document          = var.cedar_endpoint_policy
@@ -115,11 +120,6 @@ resource "aws_verifiedaccess_endpoint" "main" {
   })
 }
 
-resource "aws_verifiedaccess_instance_trust_provider_attachment" "idc" {
-  verifiedaccess_instance_id       = aws_verifiedaccess_instance.main.id
-  verifiedaccess_trust_provider_id = aws_verifiedaccess_trust_provider.identity_center.id
-}
-
 resource "aws_verifiedaccess_instance_logging_configuration" "main" {
   verifiedaccess_instance_id = aws_verifiedaccess_instance.main.id
 
@@ -128,6 +128,8 @@ resource "aws_verifiedaccess_instance_logging_configuration" "main" {
       enabled   = true
       log_group = var.log_group_name
     }
+
+    include_trust_context = true
   }
 }
 

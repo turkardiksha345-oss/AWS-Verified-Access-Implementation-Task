@@ -1,6 +1,7 @@
 FROM python:3.12-slim-bookworm AS builder
 
 WORKDIR /build
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
@@ -15,7 +16,10 @@ RUN groupadd -r appuser && useradd -r -g appuser -s /sbin/nologin appuser
 WORKDIR /app
 
 COPY --from=builder /install /usr/local
+
 COPY app.py .
+COPY templates ./templates
+COPY static ./static
 
 RUN chown -R appuser:appuser /app
 
