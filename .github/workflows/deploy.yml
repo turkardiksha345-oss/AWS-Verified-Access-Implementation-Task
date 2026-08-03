@@ -2,7 +2,7 @@ name: Deploy yaml
  
 on:
   workflow_run:
-    workflows: [CI]
+    workflows: [ Secure Access Portal CI/CD ]
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -11,7 +11,7 @@ on:
         required: true
         default: dev
         type: choice
-        options: [dev, prod]
+        options: [dev, pre-prod]
 
 concurrency:
   group: deploy-${{ github.ref }}

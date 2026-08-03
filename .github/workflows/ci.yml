@@ -1,4 +1,4 @@
-name: CI
+name: Secure Access Portal CI/CD
 
 on:
   pull_request:
