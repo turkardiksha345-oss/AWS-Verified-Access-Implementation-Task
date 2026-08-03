@@ -23,12 +23,12 @@ permissions:
 
 # Configure these values in GitHub under Settings > Secrets and variables > Actions.
 env:
-  AWS_REGION: ${{ vars.AWS_REGION || 'ap-south-1' }}
+  AWS_REGION: ${{ vars.AWS_REGION || 'eu-north-1' }}
   TF_VERSION: ${{ vars.TF_VERSION || '1.14.2' }}
   TERRAFORM_DIR: terraform
   APP_DIR: application
-  ECR_REPOSITORY_NAME: ${{ vars.ECR_REPOSITORY_NAME || secrets.ECR_REPOSITORY_NAME || 'secure-access-portal-dev-app' }}
-  APP_URL: ${{ vars.APP_URL || secrets.APP_URL || 'https://app.cdec-engineer.store' }}
+  ECR_REPOSITORY_NAME: ${{ vars.ECR_REPOSITORY_NAME || 'secure-access-portal-preprod-app' }}
+  APP_URL: ${{ vars.APP_URL || 'https://app.cdec-engineer.store' }}
 
 jobs:
   deploy:
@@ -73,10 +73,10 @@ jobs:
           terraform init -backend-config=environments/dev/backend.hcl -input=false
           terraform plan -var-file=environments/dev/terraform.tfvars -out=tfplan -input=false
 
-      - name: Terraform apply
-        run: |
-          cd ${{ env.TERRAFORM_DIR }}
-          terraform apply -auto-approve -input=false tfplan
+    #  - name: Terraform apply
+    #    run: |
+    #     cd ${{ env.TERRAFORM_DIR }}
+    #     terraform apply -auto-approve -input=false tfplan
 
       - name: Trigger Auto Scaling Group instance refresh
         if: ${{ secrets.AWS_ASG_NAME != '' }}
