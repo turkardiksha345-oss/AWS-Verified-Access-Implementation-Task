@@ -34,15 +34,15 @@ python -m pytest tests/ -v
 python app.py
 ```
 
-## GitLab CI/CD
+## Github CI/CD
 
-Repository: `nehal-wandhare-group/secure-access-portal`
+Repository: `turkardiksha345-oss/AWS-Verified-Access-Implementation-Task`
 
-Set `AWS_ROLE_ARN` to the deployed `secure-access-portal-dev-terraform-role` ARN in GitLab CI/CD variables.
+Set `AWS_ROLE_ARN` to the deployted `secure-access-portal-terraform-role` ARN in Github CI/CD variables.
 
 ## DNS
 
-After the ACM certificate validation record is created, point `portal-dev.cdec-engineer.store` to the Verified Access endpoint shown by:
+After the ACM certificate validation record is created, point `app.cdec-engineer.store` to the Verified Access endpoint shown by:
 
 ```bash
 terraform output -json dns_records_for_manager
